@@ -30,8 +30,8 @@ Single image inference with MiDaS v3.0 Large.
 """
 
 
-# EXTENSION_LIST = [".jpg", ".jpeg", ".png"]
-EXTENSION_LIST = [".jpg", ".jpeg"]
+EXTENSION_LIST = [".jpg", ".jpeg", ".png"]
+
 
 
 def parse_args():
