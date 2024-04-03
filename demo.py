@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import argparse
+from pathlib import Path
 import random
 import time
 import os
@@ -34,9 +35,7 @@ EXTENSION_LIST = [".jpg", ".jpeg"]
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Run single-image depth estimation using Zoedepth."
-    )
+    parser = argparse.ArgumentParser(description="Run single-image depth estimation using Zoedepth.")
     parser.add_argument(
         "--model",
         type=str,
@@ -54,9 +53,7 @@ def parse_args():
         help="Path to the input image folder.",
     )
 
-    parser.add_argument(
-        "--output_dir", type=str, required=True, help="Output directory."
-    )
+    parser.add_argument("--output_dir", type=str, required=True, help="Output directory.")
     parser.add_argument("--seed", type=int, default=None, help="Random seed.")
 
     # depth map colormap
@@ -70,9 +67,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def colorize_depth_maps(
-    depth_map, min_depth, max_depth, cmap="Spectral", valid_mask=None
-):
+def colorize_depth_maps(depth_map, min_depth, max_depth, cmap="Spectral", valid_mask=None):
     """
     Colorize depth maps.
     """
@@ -175,9 +170,7 @@ def plot_3d(rgb: Image, depth: np.ndarray):
 
     # Convert to Open3D format
     xyz = np.stack([x3, y3, z3], axis=1)
-    rgb = np.stack(
-        [rgb[:, :, 0].flatten(), rgb[:, :, 1].flatten(), rgb[:, :, 2].flatten()], axis=1
-    )
+    rgb = np.stack([rgb[:, :, 0].flatten(), rgb[:, :, 1].flatten(), rgb[:, :, 2].flatten()], axis=1)
 
     xyz = clean_with_nerfbusters(
         torch.Tensor(xyz),
@@ -248,9 +241,7 @@ def main():
 
     # -------------------- Data --------------------
     rgb_filename_list = glob(os.path.join(args.input_rgb_dir, "*"))
-    rgb_filename_list = [
-        f for f in rgb_filename_list if os.path.splitext(f)[1].lower() in EXTENSION_LIST
-    ]
+    rgb_filename_list = [f for f in rgb_filename_list if os.path.splitext(f)[1].lower() in EXTENSION_LIST]
     rgb_filename_list = sorted(rgb_filename_list)
     n_images = len(rgb_filename_list)
     if n_images > 0:
@@ -289,7 +280,7 @@ def main():
             # plot_3d(rgb, depth_pred)
 
             # Save depth map with numpy
-            fname = os.path.basename(rgb_path) + ".npy"
+            fname = Path(rgb_path).stem + ".npy"
             output_path = os.path.join(args.output_dir, fname)
             np.save(output_path, depth_pred)
 
